@@ -1,0 +1,1 @@
+This repository contains individual team member (Senthil) contributions and resources of the UART project.

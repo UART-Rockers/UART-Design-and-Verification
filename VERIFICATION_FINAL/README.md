@@ -1,0 +1,1 @@
+This reporsitory consists of all the final code files present in the UART verification project.

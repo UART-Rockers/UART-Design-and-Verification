@@ -1,0 +1,1 @@
+This repository contains individual team member (Lakshana) contributions and resources of the UART project.
