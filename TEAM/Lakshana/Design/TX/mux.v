@@ -15,7 +15,7 @@ module mux (start_bit, data_bit, parity_bit, stop_bit, select, tx_data_out);
     end
     
 endmodule
-
+ 
 /*
 module muxtest;
 
