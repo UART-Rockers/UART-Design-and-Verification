@@ -11,7 +11,7 @@ if(load==0)
 parity_bit=1'b0;
 
 else
- parity_bit =^(tx_data_in) ;
+parity_bit =^(tx_data_in) ;
 
 
 endmodule
