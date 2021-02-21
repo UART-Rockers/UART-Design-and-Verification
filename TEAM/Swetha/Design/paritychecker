@@ -1,0 +1,55 @@
+module paritychecker(out,rst,parityload,sipoout,paritybiterror,parityout);
+     input rst,parityload,out;
+     input [7:0] sipoout;
+     output reg paritybiterror;
+     output reg [7:0] parityout;
+
+    always @(*) begin
+        if (!rst) begin
+            if (parityload) begin
+                     if(out==(^sipoout)) begin
+                             parityout<=sipoout;
+                             paritybiterror<=0;
+                     end
+                     else begin
+                          parityout<=8'b00000000;
+                          paritybiterror<=1;
+                     end
+            end
+            else begin
+                 parityout<=8'b00000000;
+                 paritybiterror<=1;
+            end
+        end
+        else begin
+             parityout<=8'b00000000;
+             paritybiterror<=1;
+        end
+    end
+
+endmodule
+
+
+//Test
+`timescale 1ns/1ns
+`include "design.v"
+  module tb;
+      reg rst,parityload,out;
+      reg [7:0] sipoout;
+      wire paritybiterror;
+      wire [7:0] parityout;
+
+     paritychecker pc(.out(out),.rst(rst),.parityload(parityload),.sipoout(sipoout),.paritybiterror(paritybiterror),.parityout(parityout));
+
+    initial begin
+      $dumpfile("a.vcd");
+      $dumpvars(0,tb);
+       $monitor($time,"out=%b,rst=%b,parityload=%b,sipoout=%b,paritybiterror=%b,parityout=%b",out,rst,parityload,sipoout,paritybiterror,parityout);
+       out=1;rst=0;parityload=1;sipoout=8'b10110011;
+       #5 out=0;
+       #5 rst=1;
+       #5 parityload=0;
+       #5 $finish;
+    end
+
+  endmodule
