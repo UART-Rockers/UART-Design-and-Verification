@@ -1,0 +1,50 @@
+module piso(load,shift,clk,Txdata,data);
+    input load,shift,clk;
+    input [7:0] Txdata;
+    output reg data;
+    reg [7:0] temp;
+    integer i;
+
+    always @(posedge clk) begin
+         if (load) begin
+             for(i=0;i<=7;i=i+1) begin 
+               temp[i]<=Txdata[i];
+             end
+         end
+         if (shift) begin
+           temp<={1'b0,temp[7:1]};
+         end   
+    end  
+  assign data=temp[0];
+  
+endmodule
+
+
+//Test
+
+`timescale 1ns/1ns
+`include "design.v"
+   module tb;
+     reg load,shift,clk;
+     reg [7:0] Txdata;
+     wire data;
+     reg [7:0] temp;
+
+     piso p(.load(load),.shift(shift),.clk(clk),.Txdata(Txdata),.data(data));
+       initial begin
+        $dumpfile("a.vcd");
+        $dumpvars(0,tb);
+        $monitor($time,"load=%b,shift=%b,clk=%b,Txdata=%b,data=%b",load,shift,clk,Txdata,data);
+        clk=1; Txdata=8'b10111101; load=1; shift=0;
+        #4 load =0 ; shift=1;
+        #4 shift=1; load=0;
+        #4 shift=1; load=0;
+        #4 shift=1; load=0;
+        #4 shift=1; load=0;
+        #4 shift=1; load=0;
+        #4 shift=1; load=0;
+        #4 $finish;
+      end
+     
+    always #2 clk=~clk;
+endmodule
