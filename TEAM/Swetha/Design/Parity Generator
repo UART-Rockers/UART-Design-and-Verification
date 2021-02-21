@@ -1,0 +1,33 @@
+module paritygen(Txdata,load,parity);
+    input [7:0] Txdata;
+    input load;
+    output reg parity;
+    always @(*) begin
+       if (load) begin
+           parity=^(Txdata);
+       end
+       else begin 
+          parity=0;
+       end
+    end
+endmodule
+
+
+//Test
+`timescale 1ns/1ns
+`include "design.v"
+   module tb;
+      reg [7:0] Txdata;
+      reg load;
+      wire parity;
+     paritygen p(.Txdata(Txdata),.load(load),.parity(parity));
+            initial begin
+               $dumpfile("a.vcd");
+               $dumpvars(0,tb);        $monitor($time,"Txdata=%b,load=%b,parity=%b",Txdata,load,parity);
+               Txdata=8'b10110101;
+               load=0;
+               #5 load=1;
+               #5 load=1;
+               $finish;
+            end
+   endmodule
