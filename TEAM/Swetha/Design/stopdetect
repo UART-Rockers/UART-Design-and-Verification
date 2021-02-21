@@ -1,0 +1,55 @@
+module stopdetect(out,rst,parityout,checkstop,stopbiterror,finalout);
+    input out,rst,checkstop;
+    input [7:0] parityout;
+    output reg stopbiterror;
+    output reg [7:0] finalout;
+   
+   always @(*) begin
+        if(!rst) begin
+              if(checkstop) begin
+                    if(out) begin
+                        finalout<=parityout;
+                        stopbiterror<=0;
+                    end
+                    else begin
+                        finalout<=8'b00000000;
+                        stopbiterror<=1;
+                    end
+              end
+              else begin
+                 finalout<=8'b00000000;
+                 stopbiterror<=1;
+              end
+        end
+        else begin
+            finalout<=8'b00000000;
+            stopbiterror<=1;
+        end
+   end
+endmodule
+
+
+//Test
+`timescale 1ns/1ns
+`include "design.v"
+module tb;
+    reg out,rst,checkstop;
+    reg [7:0] parityout;
+    wire stopbiterror;
+    wire [7:0] finalout;
+
+    stopdetect sd(.out(out),.rst(rst),.parityout(parityout),.checkstop(checkstop),.stopbiterror(stopbiterror),.finalout(finalout));
+
+   initial begin
+     $dumpfile("a.vcd");
+      $dumpvars(0,tb);
+      $monitor($time,"out=%b,rst=%b,parityout=%b,checkstop=%b,stopbiterror=%b,finalout=%b",out,rst,parityout,checkstop,stopbiterror,finalout);
+      out=1;rst=1;parityout=8'b10110011;checkstop=1;
+      #5 rst=0;
+      #5 out=0;
+      #5 checkstop=0;
+      #5 checkstop=1;out=1;
+      #5 $finish;
+   end
+
+endmodule
