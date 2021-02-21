@@ -1,0 +1,10 @@
+module detect_start (rx_in , start_bit_dec) ;
+
+input rx_in  ;
+output start_bit_dec ;
+
+
+assign start_bit_dec = rx_in ? 0 : 1 ;
+
+
+endmodule
