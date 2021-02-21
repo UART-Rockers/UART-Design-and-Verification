@@ -1,0 +1,54 @@
+`include "transmitterfsm.v"
+`include "piso.v"
+`include "paritygen.v"
+`include "mux.v"
+
+module transmitter(clk,rst,Txstart,Txdata,out,Txbusy);
+  input clk,rst,Txstart;
+  input [7:0] Txdata;
+  output out;
+  output Txbusy;
+  wire shift,load,parity,data;
+  wire [1:0] sel;
+  parameter start=0,stop=1;
+  
+  transmitterfsm tfsm(.Txstart(Txstart),.shift(shift),.clk(clk),.rst(rst),.load(load),.sel(sel),.Txbusy(Txbusy));
+  
+  piso pi(.load(load),.shift(shift),.clk(clk),.Txdata(Txdata),.data(data));
+  
+  paritygen p(.Txdata(Txdata),.load(load),.parity(parity));
+  
+  mux m(.start(start),.data(data),.parity(parity),.stop(stop),.sel(sel),.out(out));
+  
+endmodule
+
+
+//Test
+`timescale 1ns/1ns
+`include "design.v"
+   module tb;
+     reg clk,rst,Txstart;
+     reg [7:0] Txdata;
+     wire out;
+     wire Txbusy;
+     
+     transmitter txn(.clk(clk),.rst(rst),.Txstart(Txstart),.Txdata(Txdata),.out(out),.Txbusy(Txbusy));
+     
+     initial begin  
+       //$dumpfile("a.vcd");
+       //$dumpvars(0,tb);  $monitor($time,"clk=%b,rst=%b,Txstart=%b,Txdata=%b,out=%b,Txbusy=%b",clk,rst,Txstart,Txdata,out,Txbusy);
+       clk=1;rst=1;Txstart=1;Txdata=8'b10110101;
+       #4 rst=0;
+       #46 Txstart=0;
+       #4 finish;
+     end
+     
+    always #2 clk=~clk;
+   endmodule
+  
+  
+
+
+  
+  
+  
