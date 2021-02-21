@@ -1,0 +1,109 @@
+module transmitterfsm(Txstart,shift,clk,rst,load,sel,Txbusy);
+     input Txstart,clk,rst;
+     output reg shift,load,Txbusy;
+     output reg [1:0] sel;
+     reg [2:0] state,next,count;
+  
+  parameter [2:0] IDLE=3'b000,start=3'b001,data=3'b010,parity=3'b011,stop=3'b100;
+     always @(posedge clk) begin
+          if(!Txstart | rst) begin
+               state<=IDLE;
+               Txbusy<=0;
+               count<=0;
+          end
+          else begin
+             state<=next;
+                if(state==data) begin
+                   count=count+1;
+                end
+                else begin
+                   count=0;
+                end
+          end
+     end
+
+     always @(*) begin
+         case(state)
+             IDLE:begin
+                shift<=0;
+                load<=0;
+                Txbusy<=0;
+                sel<=2'b11;
+                  if(Txstart) begin
+                       next<=start;
+                  end
+                  else begin
+                       next<=IDLE;
+                  end
+             end
+             start:begin
+                shift<=0;
+                load<=1;
+                Txbusy<=1;
+                sel<=2'b00;
+                next<=data;
+             end
+             data:begin
+                shift<=1;
+                load<=0;  
+                Txbusy<=1;
+                sel<=2'b01;
+               if(count!=7) begin
+                       next<=data;
+                  end
+                  else begin
+                       next<=parity;
+                  end
+             end
+             parity:begin
+                shift<=0;
+                load<=1;
+                Txbusy<=1;
+                sel<=2'b10;
+                next<=stop;
+             end
+             stop:begin
+                shift<=0;
+                load<=0;
+                Txbusy<=0;
+                sel<=2'b11;
+             end
+             default:begin
+                shift<=0;
+                load<=0;
+                Txbusy<=0;
+                sel<=2'b11;
+                next<=IDLE;
+             end
+         endcase
+     end
+endmodule
+
+
+//Test
+
+`timescale 1ns/1ns
+`include "design.v"
+   module tb;
+
+     reg Txstart,clk,rst;
+     wire [1:0] sel;
+     wire shift,load,Txbusy;  
+     reg [2:0] state,next,count;      
+
+
+     transmitterfsm t(.Txstart(Txstart),.shift(shift),.clk(clk),.rst(rst),.load(load),.sel(sel),.Txbusy(Txbusy));
+      initial begin
+        $dumpfile("a.vcd");
+        $dumpvars(0,tb);
+         $monitor($time,"Txstart=%b,shift=%b,clk=%b,rst=%b,load=%b,sel=%b,Txbusy=%b",Txstart,shift,clk,rst,load,sel,Txbusy);
+        clk=1; rst=1; Txstart=1;
+    	#4; 
+        rst=0; 
+        #46 Txstart=0;
+        #2 Txstart=1;
+        #5 $finish;
+      end
+    
+     always #2 clk=~clk;
+endmodule
