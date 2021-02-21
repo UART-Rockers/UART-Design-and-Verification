@@ -1,0 +1,46 @@
+module mux(start,data,parity,stop,sel,out);
+
+   input start,data,parity,stop;
+   input [1:0] sel;
+   output reg out;
+
+   always @(*) begin
+     if (sel==2'b00) begin
+              out=start;
+         end
+     if (sel==2'b01) begin
+              out=data;
+         end
+     if (sel==2'b10) begin
+              out=parity;
+         end
+     if (sel==2'b11) begin
+              out=stop;
+         end   
+   end
+endmodule
+
+
+//Test
+
+`timescale 1ns/1ns
+`include "design.v"
+   module tb;
+
+     reg start,data,parity,stop;
+     reg [1:0] sel;
+     wire out;
+
+     mux m(.start(start),.data(data),.parity(parity),.stop(stop),.sel(sel),.out(out));
+
+     initial begin  
+       $dumpfile("a.vcd");
+       $dumpvars(0,tb); $monitor($time,"start=%b,data=%b,parity=%b,stop=%b,sel=%b,out=%b",start,data,parity,stop,sel,out);
+       start=0;data=1;parity=0;stop=1;sel=2'b00;
+       #2 sel=2'b01;
+       #2 sel=2'b11;
+       #2 $finish;
+     end
+
+
+   endmodule
