@@ -1,0 +1,32 @@
+module detectstart(out,rst,db);
+   input out,rst;
+   output reg db;
+  always @(*) begin
+    if (rst|out) begin
+         db=0;
+    end
+    else begin
+         db=1;
+    end
+  end
+
+endmodule
+
+
+//Test
+`timescale 1ns/1ns
+`include "design.v"
+   module tb;
+     reg out,rst;
+     wire db;
+     detectstart ds(.out(out),.rst(rst),.db(db));
+     initial begin
+       $dumpfile("a.vcd");
+       $dumpvars(0,tb);
+       $monitor($time,"out=%b,rst=%b,db=%b",out,rst,db);
+       rst=0;out=1;
+       #4 rst=0;out=0;
+       #4 rst=1;
+       #4 $finish;
+     end
+   endmodule
