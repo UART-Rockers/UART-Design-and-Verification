@@ -17,11 +17,9 @@ module uart_mux(  start_bit , parity_bit ,stop_bit ,data_bit ,data_bit ,select_b
   2'b01: tx_data_out= data_bit ;
   2'b10: tx_data_out= parity_bit;
   2'b11: tx_data_out=stop_bit;
-  default: tx_data_out = 0 ;
+  default: tx_data_out = 1'b0 ;
  endcase
  end
 
 endmodule
-
-   
 
