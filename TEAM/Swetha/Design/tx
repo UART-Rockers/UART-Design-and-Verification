@@ -10,7 +10,7 @@ module transmitter(clk,rst,Txstart,Txdata,out,Txbusy);
   output Txbusy;
   wire shift,load,parity,data;
   wire [1:0] sel;
-  parameter start=0,stop=1;
+  parameter startp=1'b0,stopp=1'b1;
   
   transmitterfsm tfsm(.Txstart(Txstart),.shift(shift),.clk(clk),.rst(rst),.load(load),.sel(sel),.Txbusy(Txbusy));
   
@@ -18,7 +18,7 @@ module transmitter(clk,rst,Txstart,Txdata,out,Txbusy);
   
   paritygen p(.Txdata(Txdata),.load(load),.parity(parity));
   
-  mux m(.start(start),.data(data),.parity(parity),.stop(stop),.sel(sel),.out(out));
+  mux m(.start(startp),.data(data),.parity(parity),.stop(stopp),.sel(sel),.out(out));
   
 endmodule
 
