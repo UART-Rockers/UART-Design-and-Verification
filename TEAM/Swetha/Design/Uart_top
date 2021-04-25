@@ -1,0 +1,18 @@
+`include "RX_top.sv"
+`include "tx_top.sv"
+module uart_top(clk,rstn,tx_start,tx_data_in,parity_bit_error ,stop_bit_error,rx_data_out);
+  input clk,rstn;
+  input tx_start;
+  input [7:0] tx_data_in;
+  output parity_bit_error ,stop_bit_error ;
+  output [7:0] rx_data_out;
+  wire tx_data_out,tx_busy;
+
+  
+  
+  tx_top txtx (.clk(clk), .rstn(rstn), .tx_start(tx_start), .tx_data(tx_data_in), .tx_data_out(tx_data_out), .tx_busy(tx_busy));
+  
+  RX_top rxrx (.clk(clk) , .rstn(rstn) , .rx_in(tx_data_out) , .parity_bit_error(parity_bit_error) ,.stop_bit_error(stop_bit_error) , .rx_data_out(rx_data_out));
+    
+endmodule
+  
