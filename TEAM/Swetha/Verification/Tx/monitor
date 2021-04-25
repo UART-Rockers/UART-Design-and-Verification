@@ -1,0 +1,11 @@
+class uart_mon;
+  uart_tx_class dx;
+  task mon_run();
+    dx=new();
+    forever begin
+      uart_config_class::bfm2mon.get(dx);
+      $display("Monitor : %p",dx);
+      uart_config_class::mon2sco.put(dx);
+    end
+  endtask
+endclass
