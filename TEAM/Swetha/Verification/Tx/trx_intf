@@ -1,0 +1,8 @@
+interface trx_intf(input logic clk,rst);//it is received as a parameter because of the clocking block which maybe used later
+  logic Txstart;
+  logic [7:0] Txdata;
+  logic Txbusy;
+  logic out;
+  
+
+endinterface
