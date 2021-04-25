@@ -1,0 +1,31 @@
+//env class
+//gen and bfm 
+`include "uart_bfm.sv"
+`include "gen_uart.sv"
+`include "uart_mon.sv"
+`include "uart_sco.sv"
+class uart_env;
+  gen_uart guart;
+  uart_bfm buart;
+  uart_mon muart;
+  uart_sco suart;
+  function new();
+    guart=new();
+    buart=new();
+    muart=new();
+    suart=new();
+  endfunction
+  task env_run();
+    fork
+      guart.g_run();
+      #5;
+      buart.bfm_run();
+      #5;
+      muart.mon_run();
+      #5;
+      suart.sco_run();    
+    join
+  endtask
+endclass
+  
+  
