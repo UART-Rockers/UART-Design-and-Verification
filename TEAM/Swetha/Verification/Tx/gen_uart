@@ -1,0 +1,15 @@
+class gen_uart;
+  uart_tx_class ugen;
+  string temp;
+  task g_run();
+    for(int i=0;i<3;i=i+1) begin
+      #15;
+      ugen=new();
+      assert(ugen.randomize());
+      $display("%p",ugen);
+      $sformat(temp,"%dnth time randomization",i);
+      ugen.printing(temp);
+      uart_config_class::gen2bfm.put(ugen);
+    end
+  endtask
+endclass
