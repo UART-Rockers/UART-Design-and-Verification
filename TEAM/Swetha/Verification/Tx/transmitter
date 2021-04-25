@@ -1,0 +1,27 @@
+// Code your design here
+`include "transmitterfsm.sv"
+`include "piso.sv"
+`include "paritygen.sv"
+`include "mux.sv"
+
+module transmitter(clk,rst,Txstart,Txdata,out,Txbusy);
+  input clk,rst,Txstart;
+  input [7:0] Txdata;
+  output out;
+  output Txbusy;
+  wire shift,load,parity,data;
+  wire [1:0] sel;
+  parameter startp=1'b0,stopp=1'b1;
+  
+  transmitterfsm tfsm(.Txstart(Txstart),.shift(shift),.clk(clk),.rst(rst),.load(load),.sel(sel),.Txbusy(Txbusy));
+  
+  piso pi(.load(load),.shift(shift),.clk(clk),.Txdata(Txdata),.data(data));
+  
+  paritygen p(.Txdata(Txdata),.load(load),.parity(parity));
+  
+  mux m(.start(startp),.data(data),.parity(parity),.stop(stopp),.sel(sel),.out(out));
+  
+endmodule
+  
+  
+  
