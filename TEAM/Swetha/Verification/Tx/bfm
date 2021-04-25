@@ -1,0 +1,29 @@
+//driver
+//instantiate the transaction class,virtual interface,forever loop,get the message from mailbox,give it to dut,get the output from dut through virtual interface.
+`include "uart_tx_class.sv"
+`include "uart_config_class.sv"
+class uart_bfm;
+  uart_tx_class tx;
+  virtual trx_intf vif;
+  task bfm_run();
+    vif=uart_config_class::svif;
+    forever begin
+      tx=new();
+      uart_config_class::gen2bfm.get(tx);
+      #10;
+      vif.Txstart=tx.Txstart;
+      vif.Txdata=tx.Txdata;
+      $display("data passed to dut");
+      #3;
+      tx.Txbusy=vif.Txbusy;
+      tx.out=vif.out;
+      $display("data received from dut");
+      $display("%p",tx);
+      tx.printing("the end");
+      uart_config_class::bfm2mon.put(tx);
+    end
+  endtask
+endclass
+      
+      
+      
