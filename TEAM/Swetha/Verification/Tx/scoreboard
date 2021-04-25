@@ -1,0 +1,23 @@
+class uart_sco;
+  uart_tx_class sx;
+  //integer count=0;
+  //bit outcheck[$:10];
+  task sco_run();
+    sx=new();
+    forever begin
+      uart_config_class::mon2sco.get(sx);
+      $display("scoreboard %p",sx);
+      //sx.Txstart,sx.Txbusy;//check for busy
+      //count=count+1;
+      //outcheck.push_front(sx.out);
+      //$display("Outcheck : %p",outcheck);
+      //@(count==10) begin
+        //$display("Outcheck : %p",outcheck);
+       // sx.out==exp.out;//check for data
+        //count=0;
+    end
+  endtask
+endclass 
+      
+      //clk,rst,Txstart,Txdata,out,Txbusy
+      
