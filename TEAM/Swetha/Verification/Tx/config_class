@@ -1,0 +1,7 @@
+//config class
+class uart_config_class;
+  static mailbox gen2bfm=new();
+  static mailbox bfm2mon=new();
+  static mailbox mon2sco=new();
+  static virtual trx_intf svif;
+endclass
