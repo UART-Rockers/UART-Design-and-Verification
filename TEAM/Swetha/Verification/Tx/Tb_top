@@ -1,0 +1,29 @@
+`include "transmitter.sv"
+`include "trx_intf.sv"
+`include "uart_env.sv"
+module uart_top;
+  logic clk;
+  logic rst;
+  uart_env ehdl;
+  trx_intf pif(.clk(clk),.rst(rst));//the clk and rst which is generated in the tb top goes to the dut through the physical interface via virtual interface
+  transmitter dut(.clk(pif.clk),.rst(pif.rst),.Txstart(pif.Txstart),.Txdata(pif.Txdata),.out(pif.out),.Txbusy(pif.Txbusy));
+  initial begin
+    uart_config_class::svif=pif;
+  end
+  initial begin
+    ehdl=new();
+    $display("Starting");
+    ehdl.env_run();
+  end
+  initial begin
+	clk = 1'b0;
+	forever #5 clk = ~ clk;
+  end
+  initial begin
+    rst = 1'b1;
+    repeat(1) @(posedge clk);
+    rst = 1'b0;
+    #500;
+	$finish;
+  end
+endmodule
