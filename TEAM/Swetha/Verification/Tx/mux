@@ -1,0 +1,22 @@
+// Code your design here
+module mux(start,data,parity,stop,sel,out);
+
+   input start,data,parity,stop;
+   input [1:0] sel;
+   output reg out;
+
+   always @(*) begin
+     if (sel==2'b00) begin
+              out=start;
+         end
+     if (sel==2'b01) begin
+              out=data;
+         end
+     if (sel==2'b10) begin
+              out=parity;
+         end
+     if (sel==2'b11) begin
+              out=stop;
+         end   
+   end
+endmodule
