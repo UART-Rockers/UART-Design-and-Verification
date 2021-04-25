@@ -1,0 +1,12 @@
+class uart_tx_class;
+  rand bit Txstart;
+  rand bit [7:0] Txdata;
+  bit Txbusy;
+  bit out; //collecting all 11 together for better testing
+  
+  //any functions you can declare
+  function void printing(string name="");
+    $display("%s",name);
+   $display("Txstart=%b,Txdata=%b,Txbusy=%b,out=%b",Txstart,Txdata,Txbusy,out);
+  endfunction
+endclass
