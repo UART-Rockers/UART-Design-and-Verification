@@ -86,13 +86,15 @@ end
 STOP_BIT : begin
 load = 0 ;
 shift = 0 ;
-tx_busy = 0 ;
 select = 2'b11 ;
-if(! tx_start)
-next = IDLE ;
-else
-next = STOP_BIT ;
-end
+tx_busy = 1;
+          //tx_busy = 0;  //tx_busy should not be zero, since this shows the processor, that u have completed all '11'
+next = IDLE;
+          /*if(tx_start)//this needs to be changed -- since the next state if stop bit is 'idle' only irrespective of tx_start 
+            next = START_BIT; 
+          else 
+            next = IDLE;*/
+
 
 default : begin
 load = 0 ;
