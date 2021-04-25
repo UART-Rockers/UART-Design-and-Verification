@@ -94,7 +94,7 @@ next = IDLE;
             next = START_BIT; 
           else 
             next = IDLE;*/
-
+end
 
 default : begin
 load = 0 ;
