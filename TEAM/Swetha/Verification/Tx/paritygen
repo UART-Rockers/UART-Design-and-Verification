@@ -1,0 +1,14 @@
+// Code your design here
+module paritygen(Txdata,load,parity);
+    input [7:0] Txdata;
+    input load;
+    output reg parity;
+    always @(*) begin
+       if (load) begin
+           parity=^(Txdata);
+       end
+       else begin 
+          parity=0;
+       end
+    end
+endmodule
