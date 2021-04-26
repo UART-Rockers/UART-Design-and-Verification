@@ -1,3 +1,9 @@
+`include "detect_start.v"
+`include "SIPO.v"
+`include "parity_checker.v"
+`include "stop_bit_checker.v"
+`include "rx_fsm.v"
+
 module RX_top (clk , rstn , rx_in , parity_bit_error ,stop_bit_error , rx_data_out);
 input clk , rstn , rx_in ;
 
