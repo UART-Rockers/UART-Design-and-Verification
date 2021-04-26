@@ -1,0 +1,50 @@
+class rx_mon_class;
+virtual rx_intf mvif;
+rx_transaction_class mhdl;
+int cnt =0;
+  bit[1:0] sent_stop_array;
+  bit[10:0] uart_frame_array;
+  bit[12:0] overall;
+  task mon_run();
+    mvif = rx_config_class ::svif;
+   forever begin
+     mhdl=new();
+     wait(mvif.rstn==1);
+     @(posedge mvif.clk)
+     @(negedge mvif.clk)
+     if(cnt<13)begin
+       cnt++;
+     case(cnt)
+       1,2: begin
+         $display("1cnt=%d",cnt);
+         sent_stop_array[cnt-1]=mvif.rx_in;
+         $display("sent_stop=%d",  sent_stop_array[cnt-1]);
+       end
+       3,4,5,6,7,8,9,10,11,12,13:begin
+         $display("2cnt=%d",cnt);
+         uart_frame_array[cnt-3]=mvif.rx_in;
+         $display("frame=%b",uart_frame_array[cnt-3]);
+         if(cnt==13) begin
+           
+         overall[1:0]=sent_stop_array;
+         overall[12:2]=uart_frame_array;
+           $display("overall=%p", overall[12:2]);
+           $display("overall=%p", overall[10:3]);
+           rx_config_class::mon2sco.put(overall);
+           mhdl.parity_bit_error=mvif.parity_bit_error;
+           mhdl.stop_bit_error=mvif.stop_bit_error;
+           mhdl.rx_data_out=mvif.rx_data_out;
+           rx_config_class ::mon2sco.put(mhdl);
+           $display("mhdl=%p", mhdl);
+           cnt=0;
+      
+         end
+       end
+      endcase
+      end
+       
+      
+      
+   end
+  endtask
+endclass
