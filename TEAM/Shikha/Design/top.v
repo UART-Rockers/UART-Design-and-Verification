@@ -1,3 +1,8 @@
+`include "uart_mux.v"
+`include "uart_tx_fsm.v"
+`include "uart_piso.v"
+`include "tx_parity_gen.v
+
 module tx_top (clk , rstn ,tx_start , tx_data_in  ,tx_data_out ,  tx_busy ) ;
 
 output tx_data_out ,  tx_busy ;
