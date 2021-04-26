@@ -1,4 +1,4 @@
-module top (clk , rstn ,tx_start , tx_data_in  ,tx_data_out ,  tx_busy ) ;
+module tx_top (clk , rstn ,tx_start , tx_data_in  ,tx_data_out ,  tx_busy ) ;
 
 output tx_data_out ,  tx_busy ;
 input clk , rstn ,tx_start ;
