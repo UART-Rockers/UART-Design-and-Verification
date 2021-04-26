@@ -1,0 +1,47 @@
+`include "RX_top.sv"
+`include "rx_transaction_class.sv"
+`include "rx_intf.sv"
+`include "rx_config_class.sv"
+`include "rx_gen_class.sv"
+`include "rx_bfm_class.sv"
+`include "rx_mon_class.sv"
+`include "rx_scoreboard.sv"
+`include "rx_env_class.sv"
+module rx_tb_top;
+  bit clk=1'b0;
+  bit rstn=1'b0;//active low reset used
+  rx_env_class edl;
+  rx_intf pif(.clk(clk),.rstn(rstn));
+  
+  RX_top rxd(.clk(pif.clk) , .rstn(pif.rstn) , .rx_in(pif.rx_in) , .parity_bit_error(pif.parity_bit_error) ,.stop_bit_error(pif.stop_bit_error) , .rx_data_out(pif.rx_data_out));
+  
+  initial begin
+    rx_config_class :: svif=pif;
+  end
+  
+  initial forever #10 clk=~clk;
+  
+  initial begin
+    edl=new();
+    rstn=1'b0;
+    repeat(2) @(posedge clk);
+    rstn=1'b1;
+    $display("Inside env");
+    edl.env_run();
+  end
+  
+  initial begin
+  $dumpvars(0,rx_tb_top );
+
+    #1000;
+    $finish;
+  end
+  
+endmodule
+  
+  
+    
+    
+  
+  
+  
