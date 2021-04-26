@@ -1,0 +1,34 @@
+
+
+class rx_transaction_class;
+  rand bit[10:0] uart_tx_frame;//not to make rand
+  bit parity_bit_error ,stop_bit_error;
+  bit [7:0] rx_data_out;
+  rand bit sent_stop ;
+  
+  
+  
+  constraint rx_c{uart_tx_frame[0]==0 ;  uart_tx_frame[9]==(uart_tx_frame[1]^uart_tx_frame[2]^uart_tx_frame[3]^uart_tx_frame[4]^uart_tx_frame[5]^uart_tx_frame[6]^uart_tx_frame[7]^uart_tx_frame[8]) ;uart_tx_frame[10]==1; sent_stop==1;} 
+
+  function void print(string name="");
+    $display("Inside Transaction class : %s",name);
+    $display("uart_tx_frame=%8b,parity_bit_error=%b,stop_bit_error=%b,rx_data_out=%d",uart_tx_frame , parity_bit_error ,stop_bit_error , rx_data_out);
+  endfunction
+ 
+endclass
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
