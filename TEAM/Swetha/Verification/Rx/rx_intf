@@ -1,0 +1,6 @@
+interface rx_intf(input bit clk,rstn);
+  logic rx_in;
+  logic parity_bit_error ,stop_bit_error;
+  logic [7:0] rx_data_out;
+  
+endinterface
