@@ -1,0 +1,22 @@
+class rx_scoreboard;
+  rx_transaction_class rsc;
+  bit [12:0]ov;
+  task sco_run();
+    rsc=new();
+    forever begin
+      rx_config_class::mon2sco.get(ov);
+      $display("Scoreboard");
+      $display("expected O/p : %p",ov[10:3]);
+      rx_config_class::mon2sco.get(rsc);
+      $display("actual O/p : %p",rsc);
+      if(ov[10:3]==rsc.rx_data_out)
+        $display("Pass");
+      else 
+        $display("Fail");
+    end
+  endtask
+endclass
+      
+      
+      
+      
