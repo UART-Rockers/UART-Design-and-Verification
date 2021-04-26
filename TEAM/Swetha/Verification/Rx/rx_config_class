@@ -1,0 +1,10 @@
+class rx_config_class;
+  static virtual rx_intf svif;
+  static mailbox gen2bfm=new();
+  static mailbox mon2sco=new();
+
+  
+  
+  
+  
+endclass
