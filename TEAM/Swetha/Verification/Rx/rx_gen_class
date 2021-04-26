@@ -1,0 +1,12 @@
+class rx_gen_class;
+  rx_transaction_class ghl;
+  task gen_run();
+    for(int i=0;i<6;i=i+1) begin
+      ghl=new();
+      assert(ghl.randomize());
+      $display("Inside Generator");
+      ghl.print("Generator");
+      rx_config_class :: gen2bfm.put(ghl);
+    end
+  endtask
+endclass
