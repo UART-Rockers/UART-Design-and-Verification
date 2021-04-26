@@ -1,0 +1,48 @@
+class rx_bfm_class;
+  rx_transaction_class rhl;
+  virtual rx_intf bvif;
+  int cnt;
+  
+  bit[10:0] q;
+  
+  task bfm_run(); begin
+    bvif=rx_config_class :: svif ;
+    forever 
+      begin
+      rhl=new();
+      wait(bvif.rstn==1);
+      rx_config_class :: gen2bfm.get(rhl);
+      uart_drive_in_out(rhl);
+       cnt =0;
+    end
+    end
+  endtask
+  
+     task uart_drive_in_out(input rx_transaction_class rhl);
+       while(cnt<13) begin
+         cnt++;
+         @(posedge bvif.clk)
+         if(cnt<3) begin
+           bvif.rx_in=rhl.sent_stop;
+         end
+         else if(2<cnt<14)begin
+           bvif.rx_in=rhl.uart_tx_frame[cnt-3];
+         end
+              
+          
+    
+      
+         /*if(cnt==13) begin
+         @(posedge bvif.clk)
+        @(negedge bvif.clk);
+      $display("3 cnt %d ",cnt );
+        rhl.parity_bit_error=bvif.parity_bit_error;
+        rhl.stop_bit_error=bvif.stop_bit_error;
+        rhl.rx_data_out=bvif.rx_data_out;
+        $display(" Driver after dut: %p ",rhl);
+       
+      
+         end */
+      end
+  endtask
+  endclass
