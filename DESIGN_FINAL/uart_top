@@ -1,0 +1,21 @@
+`include "RX_top.sv"
+`include "tx_top.sv"
+`include "baud_rate_gen.sv"
+module uart_top(clk,rstn,sel,tx_start,tx_data_in,parity_bit_error ,stop_bit_error,rx_data_out);
+  input clk,rstn;
+  input tx_start;
+  input [1:0]sel;
+  input [7:0] tx_data_in;
+  output parity_bit_error ,stop_bit_error ;
+  output [7:0] rx_data_out;
+  wire tx_data_out,tx_busy;
+  wire clk_out;
+
+  baud_gen bg (.clk_in(clk),.rstn(rstn),.sel(sel),.clk_out(clk_out));
+  
+  tx_top txtx (.clk(clk_out), .rstn(rstn), .tx_start(tx_start), .tx_data(tx_data_in), .tx_data_out(tx_data_out), .tx_busy(tx_busy));
+  
+  RX_top rxrx (.clk(clk_out) , .rstn(rstn) , .rx_in(tx_data_out) , .parity_bit_error(parity_bit_error) ,.stop_bit_error(stop_bit_error) , .rx_data_out(rx_data_out));
+    
+endmodule
+  
