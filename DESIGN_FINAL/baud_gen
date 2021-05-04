@@ -1,0 +1,48 @@
+// Code your design here
+module baud_gen(clk_in,rstn,sel,clk_out);
+input clk_in,rstn;
+input[1:0]  sel;
+integer MODULUS; 
+output reg clk_out;
+real a;
+integer count=0;
+ 
+  always@(*)begin
+  case(sel)
+	2'b00:MODULUS=38580; //baud=2400;
+    2'b01:MODULUS=154321; //baud=9600
+    2'b10:MODULUS=308642; //baud =19200;
+    2'b11:MODULUS=617284; //baud =38400
+
+endcase
+end
+  always @(posedge clk_in,negedge rstn) begin
+    a=(100000000.0/MODULUS);
+    $display("a=%d,m=%d",a,MODULUS);
+    if(rstn==0) begin
+      clk_out=0;
+      count=0;
+    end 
+    else 
+      begin
+        if(count<(a/2)) begin //0 to 80 =81
+        clk_out=0;
+        count=count+1;
+          $display("count1=%d",count);
+        end
+        else if(count>=(a/2) && count<a) begin //81 to 161
+            clk_out=1;
+            count=count+1;
+            $display("count3=%d",count);
+         end
+        else if(count==int'(a)) begin
+            clk_out=0;
+            count=1;
+            $display("a=%d count2=%d",a,count);
+         end
+     end  
+    end
+
+ 
+  
+endmodule
