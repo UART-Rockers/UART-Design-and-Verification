@@ -5,5 +5,6 @@ logic[7:0] tx_data_in;
 logic parity_bit_error ,stop_bit_error ;
 logic[7:0] rx_data_out;
 logic clk_out;
+logic msel,rx_ext;
+logic tx_data_out,tx_busy;
 endinterface
-e
